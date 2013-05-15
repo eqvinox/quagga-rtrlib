@@ -277,6 +277,8 @@ AC_ARG_ENABLE(pcreposix,
   AS_HELP_STRING([--enable-pcreposix], [enable using PCRE Posix libs for regex functions]))
 AC_ARG_ENABLE(fpm,
   AS_HELP_STRING([--enable-fpm], [enable Forwarding Plane Manager support]))
+AC_ARG_ENABLE(rpki,
+[  --enable-rpki            enable RPKI prefix validation support])
 
 if test x"${enable_gcc_ultra_verbose}" = x"yes" ; then
   CFLAGS="${CFLAGS} -W -Wcast-qual -Wstrict-prototypes"
@@ -1541,11 +1543,14 @@ dnl be exposed.
 dnl -------------------------------
 AC_DEFINE(QUAGGA_NO_DEPRECATED_INTERFACES, 1, Hide deprecated interfaces)
 
-dnl +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-dnl add librtr to libs for bgp rpki
-dnl +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-LIBS="$LIBS -lrtr"
+dnl ------------------------------------
+dnl Enable RPKI and add librtr to libs
+dnl ------------------------------------
 
+if test "${enable_rpki}" = "yes"; then
+  AC_DEFINE(HAVE_RPKI,,Enable RPKI prefix validation for BGP)
+  LIBS="$LIBS -lrtr"
+fi
 dnl ---------------------------
 dnl Check htonl works correctly
 dnl ---------------------------
